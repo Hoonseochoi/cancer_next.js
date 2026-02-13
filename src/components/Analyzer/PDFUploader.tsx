@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, FileText, X, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ShineBorder } from "@/components/ui/shine-border";
+import { GlowingShadow } from "@/components/ui/GlowingShadow";
 
 interface PDFUploaderProps {
     onFileSelected: (file: File) => void;
@@ -72,19 +72,13 @@ export function PDFUploader({ onFileSelected, isAnalyzing = false }: PDFUploader
                         exit={{ opacity: 0, y: -10 }}
                     >
                         <div className="w-full max-w-md mx-auto">
-                            <ShineBorder
-                                className="relative flex flex-col items-center justify-center w-full rounded-3xl bg-white/90 backdrop-blur-sm overflow-hidden"
-                                color={["#E60000", "#FF9999", "#A60000"]}
-                                borderRadius={24}
-                                borderWidth={2}
-                            >
+                            <GlowingShadow className="w-full">
                                 <label
                                     className={cn(
-                                        "relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-3xl cursor-pointer transition-all duration-300",
-                                        isDragOver
-                                            ? "border-meritz-red scale-[1.02] bg-meritz-red/5"
-                                            : "border-meritz-gray/30 hover:border-meritz-red/50"
+                                        "relative flex flex-col items-center justify-center w-full h-[320px] cursor-pointer transition-all duration-300",
+                                        isDragOver ? "scale-[1.02]" : ""
                                     )}
+                                    style={{ background: 'transparent' }}
                                     onDragOver={handleDragOver}
                                     onDragLeave={handleDragLeave}
                                     onDrop={handleDrop}
@@ -105,12 +99,13 @@ export function PDFUploader({ onFileSelected, isAnalyzing = false }: PDFUploader
                                     </div>
                                     <input
                                         type="file"
-                                        className="hidden"
+                                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-50"
                                         accept=".pdf"
                                         onChange={handleFileInput}
+                                        title=""
                                     />
                                 </label>
-                            </ShineBorder>
+                            </GlowingShadow>
                         </div>
 
                         {error && (
