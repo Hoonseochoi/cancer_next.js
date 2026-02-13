@@ -14,7 +14,7 @@ export function CoverageSummaryScroll({ summary }: { summary: AnalysisSummary })
                     <>
                         <h1 className="text-4xl font-semibold text-meritz-text dark:text-white">
                             암치료비 한눈에 보기 <br />
-                            <span className="text-3xl md:text-5xl font-bold mt-1 leading-none text-meritz-red">
+                            <span className="text-4xl md:text-[6rem] font-bold mt-1 leading-none text-meritz-red">
                                 보장 분석 요약
                             </span>
                         </h1>
