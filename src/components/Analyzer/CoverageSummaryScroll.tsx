@@ -21,7 +21,7 @@ export function CoverageSummaryScroll({ summary }: { summary: AnalysisSummary })
                     </>
                 }
             >
-                <div id="summary-content-grid" className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 h-full bg-white dark:bg-black rounded-2xl">
+                <div id="summary-content-grid" className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 h-full bg-white dark:bg-black rounded-2xl overflow-y-auto custom-scrollbar">
                     {summary.groups.map((group, idx) => (
                         <SummaryCard key={idx} group={group} index={idx} />
                     ))}
