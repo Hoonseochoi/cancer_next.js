@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     config.resolve.alias.canvas = false;
     return config;
   },
+  // Force new build for Vercel synchronization
 };
 
 export default nextConfig;
