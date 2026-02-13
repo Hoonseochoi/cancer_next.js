@@ -38,10 +38,11 @@ export function ShineBorder({
                     "--border-radius": `${borderRadius}px`,
                 } as React.CSSProperties
             }
+            className={cn(
                 "relative grid w-full place-items-center rounded-[--border-radius] bg-white text-black dark:bg-black dark:text-white",
-        className,
-            )
-}
+                className,
+            )}
+        >
         >
             <div
                 style={
