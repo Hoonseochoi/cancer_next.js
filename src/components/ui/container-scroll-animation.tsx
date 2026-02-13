@@ -15,9 +15,20 @@ export const ContainerScroll = ({
     });
     const [isMobile, setIsMobile] = React.useState(false);
 
+    // Responsive scaling to fit fixed 1200px layout into smaller screens
+    const [scaleFactor, setScaleFactor] = React.useState(1);
+
     React.useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth <= 768);
+            const width = window.innerWidth;
+            setIsMobile(width <= 768);
+            // Base width is 1200px (fixed tablet size) plus some margin
+            // We scale down if viewport is smaller than 1280px
+            if (width < 1280) {
+                setScaleFactor(width / 1280);
+            } else {
+                setScaleFactor(1);
+            }
         };
         checkMobile();
         window.addEventListener("resize", checkMobile);
@@ -36,13 +47,16 @@ export const ContainerScroll = ({
 
     return (
         <div
-            className="h-[80rem] md:h-[100rem] flex items-center justify-center relative p-2 md:p-20"
+            className="h-[60rem] md:h-[80rem] flex items-center justify-center relative p-2 md:p-20 overflow-visible"
             ref={containerRef}
         >
             <div
-                className="py-10 md:py-40 w-full relative"
+                // Apply the responsive scale factor here to fit the fixed content
+                className="py-10 md:py-40 w-full relative flex flex-col items-center"
                 style={{
                     perspective: "1000px",
+                    transform: `scale(${scaleFactor})`,
+                    transformOrigin: "center top",
                 }}
             >
                 <Header translate={translate} titleComponent={titleComponent} />
@@ -70,6 +84,7 @@ export const Header = ({ translate, titleComponent }: any) => {
 export const Card = ({
     rotate,
     scale,
+    translate,
     children,
 }: {
     rotate: MotionValue<number>;
@@ -85,9 +100,10 @@ export const Card = ({
                 boxShadow:
                     "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
             }}
-            className="max-w-5xl -mt-12 mx-auto h-[60rem] md:h-[80rem] w-full border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl"
+            // Fixed width 1200px and fixed height 800px
+            className="max-w-[1200px] w-[1200px] -mt-12 mx-auto h-[750px] border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl flex-shrink-0"
         >
-            <div className=" h-full w-full  overflow-hidden rounded-2xl bg-[#f5f5f5] dark:bg-[#18181b] md:rounded-2xl md:p-4 ">
+            <div className="h-full w-full overflow-hidden rounded-2xl bg-[#f5f5f5] dark:bg-[#18181b] p-4">
                 {children}
             </div>
         </motion.div>
