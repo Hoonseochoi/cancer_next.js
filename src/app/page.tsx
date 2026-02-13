@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { HeroGeometric } from "@/components/ui/HeroGeometric";
 import HeroText from "@/components/ui/HeroText";
 import { PDFUploader } from "@/components/Analyzer/PDFUploader";
-import { AnalysisResults, type CoverageItem, type AnalysisSummary } from "@/components/Analyzer/AnalysisResults";
+import { AnalysisResults } from "@/components/Analyzer/AnalysisResults";
+import { type CoverageItem, type AnalysisSummary } from "@/types";
 import { extractTextFromPDF, extractRawCoverages } from "@/lib/pdf-processor";
 import { analyzeCoverages } from "@/lib/analyzer-logic";
 
