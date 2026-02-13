@@ -21,7 +21,7 @@ export function CoverageSummaryScroll({ summary }: { summary: AnalysisSummary })
                     </>
                 }
             >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 h-full overflow-y-auto bg-white dark:bg-black rounded-2xl">
+                <div id="summary-content-grid" className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 h-full bg-white dark:bg-black rounded-2xl">
                     {summary.groups.map((group, idx) => (
                         <SummaryCard key={idx} group={group} index={idx} />
                     ))}
@@ -37,7 +37,7 @@ function SummaryCard({ group, index }: { group: SummaryGroup; index: number }) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
-            className="flex flex-col gap-2 p-4 rounded-xl border border-meritz-gray/10 shadow-sm bg-white hover:shadow-md transition-all sm:p-5"
+            className="flex flex-col gap-2 p-4 rounded-xl border border-[#8C8C8C1A] shadow-sm bg-white hover:shadow-md transition-all sm:p-5"
         >
             <div className="flex justify-between items-start">
                 <h3 className="text-lg font-bold text-meritz-text truncate">{group.name}</h3>
@@ -47,11 +47,11 @@ function SummaryCard({ group, index }: { group: SummaryGroup; index: number }) {
                 {formatAmount(group.totalMin)}
             </div>
 
-            <div className="flex-1 overflow-y-auto max-h-[150px] space-y-2 mt-2 pr-1 scrollbar-thin scrollbar-thumb-meritz-gray/20">
+            <div className="flex-1 space-y-2 mt-2 pr-1">
                 {group.items.map((item, idx) => (
-                    <div key={idx} className="bg-meritz-bg/5 p-2 rounded-lg text-sm">
+                    <div key={idx} className="bg-[#EBEBEB0D] p-2 rounded-lg text-sm">
                         <div className="flex justify-between items-start gap-2">
-                            <span className="text-meritz-text/70 break-keep text-xs leading-snug">{item.name}</span>
+                            <span className="text-[#404040B3] break-keep text-xs leading-snug">{item.name}</span>
                             <span className="font-bold text-meritz-text whitespace-nowrap text-xs">{item.amount}</span>
                         </div>
                     </div>

@@ -14,6 +14,7 @@ export interface CoverageItem extends ExtractedCoverage {
     standardAmount?: string;
     diff?: number;
     message?: string;
+    subDetails?: { name: string, amount: string }[];
 }
 
 export interface SummaryGroup {

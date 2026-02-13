@@ -7,6 +7,22 @@
   --color-meritz-text: #404040;
   --color-meritz-gray: #8C8C8C;
   --color-meritz-white: #FFFFFF;
+
+  --animate-shine-pulse: shine-pulse var(--shine-pulse-duration) infinite linear;
+
+  @keyframes shine-pulse {
+    0% {
+      background-position: 0% 0%;
+    }
+
+    50% {
+      background-position: 100% 100%;
+    }
+
+    to {
+      background-position: 0% 0%;
+    }
+  }
 }
 
 /* Custom Utilities if needed later */

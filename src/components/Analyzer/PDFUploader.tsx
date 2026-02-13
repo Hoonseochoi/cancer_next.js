@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, FileText, X, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ShineBorder } from "@/components/ui/shine-border";
 
 interface PDFUploaderProps {
     onFileSelected: (file: File) => void;
@@ -70,38 +71,47 @@ export function PDFUploader({ onFileSelected, isAnalyzing = false }: PDFUploader
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                     >
-                        <label
-                            className={cn(
-                                "relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-3xl cursor-pointer transition-all duration-300 backdrop-blur-sm",
-                                isDragOver
-                                    ? "border-meritz-red bg-meritz-red/5 scale-105"
-                                    : "border-meritz-gray/30 bg-white/50 hover:bg-white/80 hover:border-meritz-red/50"
-                            )}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            onDrop={handleDrop}
-                        >
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
-                                <motion.div
-                                    animate={isDragOver ? { scale: 1.1, y: -5 } : { scale: 1, y: 0 }}
-                                    className="mb-4 text-meritz-gray"
+                        <div className="w-full max-w-md mx-auto">
+                            <ShineBorder
+                                className="relative flex flex-col items-center justify-center w-full rounded-3xl bg-white/90 backdrop-blur-sm overflow-hidden"
+                                color={["#E60000", "#FF9999", "#A60000"]}
+                                borderRadius={24}
+                                borderWidth={2}
+                            >
+                                <label
+                                    className={cn(
+                                        "relative flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-3xl cursor-pointer transition-all duration-300",
+                                        isDragOver
+                                            ? "border-meritz-red scale-[1.02] bg-meritz-red/5"
+                                            : "border-meritz-gray/30 hover:border-meritz-red/50"
+                                    )}
+                                    onDragOver={handleDragOver}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={handleDrop}
                                 >
-                                    <UploadCloud size={48} className={isDragOver ? "text-meritz-red" : ""} />
-                                </motion.div>
-                                <p className="mb-2 text-lg font-bold text-meritz-text">
-                                    가입제안서 PDF 업로드
-                                </p>
-                                <p className="text-sm text-meritz-text/60">
-                                    파일을 드래그하거나 클릭하여 선택하세요
-                                </p>
-                            </div>
-                            <input
-                                type="file"
-                                className="hidden"
-                                accept=".pdf"
-                                onChange={handleFileInput}
-                            />
-                        </label>
+                                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                                        <motion.div
+                                            animate={isDragOver ? { scale: 1.1, y: -5 } : { scale: 1, y: 0 }}
+                                            className="mb-4 text-meritz-gray"
+                                        >
+                                            <UploadCloud size={48} className={isDragOver ? "text-meritz-red" : ""} />
+                                        </motion.div>
+                                        <p className="mb-2 text-lg font-bold text-meritz-text">
+                                            가입제안서 PDF 업로드
+                                        </p>
+                                        <p className="text-sm text-meritz-text/60">
+                                            파일을 드래그하거나 클릭하여 선택하세요
+                                        </p>
+                                    </div>
+                                    <input
+                                        type="file"
+                                        className="hidden"
+                                        accept=".pdf"
+                                        onChange={handleFileInput}
+                                    />
+                                </label>
+                            </ShineBorder>
+                        </div>
 
                         {error && (
                             <motion.div

@@ -286,10 +286,41 @@ export function analyzeCoverages(extractedItems: ExtractedCoverage[]): { items: 
         let status: 'good' | 'warning' | 'missing' = 'good';
         if (!details) status = 'warning';
 
+        let subDetails: { name: string, amount: string }[] | undefined;
+
+        if (details) {
+            if (details.type === '26jong') {
+                subDetails = details.summaryItems.map(d => ({
+                    name: d.name,
+                    amount: item.amount // 26jong usually shares the same amount for sub-items
+                }));
+            } else if (details.type === 'variant') {
+                const amountVal = parseKoAmount(item.amount);
+                // Try to find variant data
+                let variantData = details.data[amountVal.toString()];
+                // Fallback logic for approximation
+                if (!variantData) {
+                    if (amountVal > 6000) variantData = details.data["8000"] || details.data["10000"];
+                    else if (amountVal > 3000) variantData = details.data["5000"] || details.data["4000"];
+                    else if (amountVal > 1000) variantData = details.data["2000"] || details.data["1000"];
+                    if (!variantData && details.data["10000"]) variantData = details.data["10000"];
+                }
+
+                if (variantData) {
+                    // Check if any variant item has 'sub' property
+                    const subs = variantData.flatMap(v => v.sub ? v.sub.map(s => ({ name: s, amount: '-' })) : []);
+                    if (subs.length > 0) {
+                        subDetails = subs;
+                    }
+                }
+            }
+        }
+
         return {
             ...item,
             status,
-            matchType: details ? details.type : 'unknown'
+            matchType: details ? details.type : 'unknown',
+            subDetails
         };
     });
 

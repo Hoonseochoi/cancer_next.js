@@ -5,6 +5,9 @@ import { CheckCircle2, AlertTriangle, Shield, TrendingUp, ChevronDown, ChevronUp
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CoverageSummaryScroll } from "./CoverageSummaryScroll";
+import { Button } from "@/components/ui/button";
+import html2canvas from "html2canvas";
+import { Download } from "lucide-react";
 
 import { CoverageItem, AnalysisSummary } from "@/types";
 
@@ -41,7 +44,7 @@ function ResultCard({ title, value, subtext, icon: Icon, colorClass, delay }: {
 }
 
 export function AnalysisResults({ items, summary }: AnalysisResultsProps) {
-    const [isDetailsOpen, setIsDetailsOpen] = useState(true);
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
     const container = {
         hidden: { opacity: 0 },
@@ -79,45 +82,53 @@ export function AnalysisResults({ items, summary }: AnalysisResultsProps) {
                 </p>
             </div>
 
-            {/* Summary Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <ResultCard
-                    title="총 추출 항목"
-                    value={`${summary.totalItems}건`}
-                    subtext="발견된 담보"
-                    icon={Shield}
-                    colorClass="text-meritz-text"
-                    delay={0.1}
-                />
-                <ResultCard
-                    title="분석 성공"
-                    value={`${summary.matchedItems}건`}
-                    subtext="매칭된 필수항목"
-                    icon={CheckCircle2}
-                    colorClass="text-blue-600"
-                    delay={0.2}
-                />
-                <ResultCard
-                    title="확인 필요"
-                    value={`${summary.missingItems}건`}
-                    subtext="미가입/미매칭"
-                    icon={AlertTriangle}
-                    colorClass="text-meritz-red"
-                    delay={0.3}
-                />
-                <ResultCard
-                    title="예상 합계 (월)"
-                    value={summary.totalPremium}
-                    subtext="단순 합산액"
-                    icon={TrendingUp}
-                    colorClass="text-meritz-gray"
-                    delay={0.4}
-                />
-            </div>
+
 
             {/* Tablet Scroll View for Treatment Costs */}
-            <div className="mb-24">
+            <div id="summary-section" className="mb-10 relative p-8 md:p-12 bg-meritz-bg rounded-[2.5rem]">
                 <CoverageSummaryScroll summary={summary} />
+            </div>
+
+            <div className="flex justify-center mb-24">
+                <Button
+                    variant="primary"
+                    size="lg"
+                    className="pl-6 pr-8 py-6 rounded-full text-base font-bold shadow-xl hover:shadow-Meritz-red/20 hover:scale-105 transition-all"
+                    onClick={async () => {
+                        // Change target to the inner grid for full content capture
+                        const element = document.getElementById('summary-content-grid');
+                        if (element) {
+                            try {
+                                const canvas = await html2canvas(element, {
+                                    scale: 3, // Higher resolution
+                                    backgroundColor: "#EBEBEB", // Match Meritz BG
+                                    useCORS: true,
+                                    logging: false,
+                                    allowTaint: true,
+                                    ignoreElements: (el) => el.tagName === 'BUTTON',
+                                    onclone: (clonedDoc) => {
+                                        // Optional: Add padding to cloned element if needed for better look
+                                        const clonedElement = clonedDoc.getElementById('summary-content-grid');
+                                        if (clonedElement) {
+                                            clonedElement.style.padding = "40px";
+                                            clonedElement.style.borderRadius = "30px";
+                                        }
+                                    }
+                                });
+                                const link = document.createElement('a');
+                                link.download = 'Meritz_Cancer_Analysis_Summary.png';
+                                link.href = canvas.toDataURL('image/png');
+                                link.click();
+                            } catch (err) {
+                                console.error("Failed to save image", err);
+                                alert("이미지 저장에 실패했습니다.");
+                            }
+                        }
+                    }}
+                >
+                    <Download className="mr-2" size={20} />
+                    이미지를 갤러리에 저장하기
+                </Button>
             </div>
 
             {/* Details Section */}
@@ -162,45 +173,7 @@ export function AnalysisResults({ items, summary }: AnalysisResultsProps) {
                             >
                                 {items.length > 0 ? (
                                     items.map((item) => (
-                                        <motion.li
-                                            key={item.id}
-                                            variants={itemVariant}
-                                            className="p-5 md:px-8 hover:bg-white transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4"
-                                        >
-                                            <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-meritz-text/10 text-meritz-text/60">
-                                                        NO. {item.id}
-                                                    </span>
-                                                    {item.status === 'warning' && (
-                                                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-meritz-red/10 text-meritz-red">
-                                                            확인 필요
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <h4 className="text-base font-bold text-meritz-text break-keep leading-snug">
-                                                    {item.name}
-                                                </h4>
-                                                <p className="text-xs text-meritz-text/40 mt-1 font-mono">
-                                                    {item.original}
-                                                </p>
-                                            </div>
-
-                                            <div className="flex items-center gap-6 md:gap-10 self-end md:self-center">
-                                                <div className="text-right">
-                                                    <span className="block text-xs text-meritz-text/40 mb-0.5">가입금액</span>
-                                                    <span className="text-lg font-black text-meritz-dark-red tracking-tight">
-                                                        {item.amount}
-                                                    </span>
-                                                </div>
-                                                <div className="text-right min-w-[80px]">
-                                                    <span className="block text-xs text-meritz-text/40 mb-0.5">보험료</span>
-                                                    <span className="text-sm font-bold text-meritz-text">
-                                                        {item.premium}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </motion.li>
+                                        <CoverageListItem key={item.id} item={item} itemVariant={itemVariant} />
                                     ))
                                 ) : (
                                     <li className="p-12 text-center text-meritz-text/40">
@@ -213,6 +186,87 @@ export function AnalysisResults({ items, summary }: AnalysisResultsProps) {
                 </AnimatePresence>
             </motion.div>
         </div>
+    );
+}
+
+function CoverageListItem({ item, itemVariant }: { item: CoverageItem; itemVariant: any }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const hasSubDetails = item.subDetails && item.subDetails.length > 0;
+
+    return (
+        <motion.li
+            variants={itemVariant}
+            className="group p-5 md:px-8 hover:bg-white transition-colors border-b border-meritz-gray/5 last:border-0"
+        >
+            <div
+                className={cn("flex flex-col md:flex-row md:items-center justify-between gap-4 cursor-pointer", hasSubDetails ? "" : "cursor-default")}
+                onClick={() => hasSubDetails && setIsExpanded(!isExpanded)}
+            >
+                <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-meritz-text/10 text-meritz-text/60">
+                            NO. {item.id}
+                        </span>
+                        {item.status === 'warning' && (
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-meritz-red/10 text-meritz-red">
+                                확인 필요
+                            </span>
+                        )}
+                        {hasSubDetails && (
+                            <span className="ml-auto md:ml-2 text-xs text-meritz-text/40 flex items-center gap-1 group-hover:text-meritz-red transition-colors">
+                                {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                {isExpanded ? "접기" : "상세보기"}
+                            </span>
+                        )}
+                    </div>
+                    <h4 className="text-base font-bold text-meritz-text break-keep leading-snug">
+                        {item.name}
+                    </h4>
+                    <p className="text-xs text-meritz-text/40 mt-1 font-mono">
+                        {item.original}
+                    </p>
+                </div>
+
+                <div className="flex items-center gap-6 md:gap-10 self-end md:self-center">
+                    <div className="text-right">
+                        <span className="block text-xs text-meritz-text/40 mb-0.5">가입금액</span>
+                        <span className="text-lg font-black text-meritz-dark-red tracking-tight">
+                            {item.amount}
+                        </span>
+                    </div>
+                    <div className="text-right min-w-[80px]">
+                        <span className="block text-xs text-meritz-text/40 mb-0.5">보험료</span>
+                        <span className="text-sm font-bold text-meritz-text">
+                            {item.premium}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Sub Details */}
+            <AnimatePresence>
+                {hasSubDetails && isExpanded && (
+                    <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                    >
+                        <div className="mt-4 pt-4 border-t border-meritz-gray/10 bg-meritz-bg/30 -mx-5 px-5 md:-mx-8 md:px-8 py-4 rounded-b-xl">
+                            <h5 className="text-xs font-bold text-meritz-text/60 mb-2">세부 보장 내역</h5>
+                            <ul className="space-y-2">
+                                {item.subDetails!.map((sub, idx) => (
+                                    <li key={idx} className="flex justify-between text-sm">
+                                        <span className="text-meritz-text/80">• {sub.name}</span>
+                                        <span className="font-bold text-meritz-text/60">{sub.amount}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.li>
     );
 }
 
