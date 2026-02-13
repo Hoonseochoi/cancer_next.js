@@ -68,7 +68,7 @@ export const ContainerScroll = ({
     );
 };
 
-export const Header = ({ translate, titleComponent }: any) => {
+export const Header = ({ translate, titleComponent }: { translate: any, titleComponent: any }) => {
     return (
         <motion.div
             style={{
@@ -82,30 +82,17 @@ export const Header = ({ translate, titleComponent }: any) => {
 };
 
 export const Card = ({
-    rotate,
-    scale,
-    translate,
     children,
 }: {
-    rotate: MotionValue<number>;
-    scale: MotionValue<number>;
-    translate: MotionValue<number>;
     children: React.ReactNode;
 }) => {
     return (
-        <motion.div
-            style={{
-                rotateX: rotate,
-                scale,
-                boxShadow:
-                    "0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003",
-            }}
-            // Fixed width 900px and fixed height 1300px (Portrait Mode)
+        <div
             className="max-w-[900px] w-[900px] -mt-12 mx-auto h-[1300px] border-4 border-[#6C6C6C] p-2 md:p-6 bg-[#222222] rounded-[30px] shadow-2xl flex-shrink-0"
         >
             <div className="h-full w-full overflow-hidden rounded-2xl bg-[#f5f5f5] dark:bg-[#18181b] p-4">
                 {children}
             </div>
-        </motion.div>
+        </div>
     );
 };
